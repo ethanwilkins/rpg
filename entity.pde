@@ -1,7 +1,7 @@
 // The Character class
 // class for all enemies, neutral npc's, or allies (conjured or otherwise)
 // entities need to be able to wander or navigate a set path for any map
-// and switch to and from a fighting state 
+// and switch to and from a fighting state
 
 class Entity {
   PVector loc;

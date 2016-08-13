@@ -1,6 +1,5 @@
 // to account for maps of varying arrangement
-// all maps and entities (including user)
-//   will manifest and interface from World
+// all maps and entities (including user) will manifest from World
 
 class World {
   ArrayList<Entity> entities;
