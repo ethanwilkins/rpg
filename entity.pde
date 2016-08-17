@@ -10,7 +10,7 @@ class Entity {
   
   Entity () {
     loc = new PVector(random(width), random(height));
-    _color = color(255);
+    _color = color(255, 0, 0);
   }
   
   void display() {
