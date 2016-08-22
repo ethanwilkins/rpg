@@ -7,22 +7,26 @@ class Entity {
   PVector loc;
   color _color;
   ArrayList<Item> bag;
+  float w, h;
   
-  Entity () {
-    loc = new PVector(random(width), random(height));
-    _color = color(255, 0, 0);
+  Entity (PVector _loc) {
+    loc = _loc; _color = color(255, 0, 0);
+    w = h = nodeSize*4;
   }
   
   void display() {
     noStroke();
     fill(_color);
-    rectMode(CENTER);
-    rect(loc.x, loc.y, 25, 25);
+    rect(loc.x, loc.y, w, h);
   }
   
   void update() {
   }
 }
+
+// character classes not necessarily represented traditionally in games
+// alternative names, inspired by solar/cyberpunk aesthetic
+// minimalist class names, fourth class possibility
 
 // close quarters combat, direct contact
 // slow but has the most health and defense, can wear heavy armour
