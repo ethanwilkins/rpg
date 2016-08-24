@@ -109,7 +109,11 @@ class Map {
       }
       
       for (int i=0; i<neighbors(current).size(); i++) {
-        
+        Node next = neighbors(current).get(i);
+        float newCost = current.costSoFar + graphCost(current, next);
+        if (/*next.costSoFar == null || */newCost < next.costSoFar) {
+          
+        }
       }
     }
   }
@@ -118,9 +122,32 @@ class Map {
     ArrayList<Node> neighbors = new ArrayList<Node>();
     for (int i=0; i<nodes.size(); i++) {
       Node node = nodes.get(i);
-      
+      if (canWalkHere(node) && dist(node.loc.x, node.loc.y,
+        current.loc.x, current.loc.y) <= nodeSize) {
+        neighbors.add(node);
+      }
     }
     return neighbors;
+  }
+  
+  boolean canWalkHere(Node node) {
+    boolean canWalkHere = true;
+    for (int i=0; i<obstacles.size(); i++) {
+      Obstacle obs = obstacles.get(i);
+      if (node.loc.x >= obs.loc.x && node.loc.x <= obs.loc.x+obs.w
+        && node.loc.y >= obs.loc.y && node.loc.y <= obs.loc.y+obs.h) {
+        canWalkHere = false;
+      }
+    }
+    return canWalkHere;
+  }
+  
+  int graphCost(Node n1, Node n2) {
+    float cost, xCost, yCost;
+    xCost = abs(n1.loc.x - n2.loc.x);
+    yCost = abs(n1.loc.y - n2.loc.y);
+    cost = (xCost + yCost) / nodeSize;
+    return int(cost);
   }
 }
 
