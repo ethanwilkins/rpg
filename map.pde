@@ -20,6 +20,8 @@ class Map {
     buildGrid();
     buildObstacles();
     assembleEntities();
+    
+    aStar(nodes.get(0), nodes.get(200));
   }
   
   void display() {
@@ -84,7 +86,7 @@ class Map {
   void assembleEntities() {
     user = new User(randomNode().loc);
     entities = new ArrayList<Entity>();
-    for (int i=0; i < 2; i++) {
+    for (int i=0; i<1; i++) {
       entities.add(new Entity(randomNode().loc));
     }
   }
@@ -97,25 +99,35 @@ class Map {
     // whats been explored so far
     ArrayList<Node> frontier = new ArrayList<Node>();
     // initializes with starting node
-    frontier.add(new Node(start.loc, 0,0,0)); start = frontier.get(0);
+    frontier.add(start); start = frontier.get(0);
     // starting node has no from vector with 0 cost
     start.cameFrom = null; start.costSoFar = 0;
+    start.costSoFarSet = true;
     
     while (!frontier.isEmpty()) {
+      // always gets last node added to frontier
       Node current = frontier.get(frontier.size()-1);
       
+      // ends when goals reached
       if (current.loc == goal.loc) {
         break;
       }
       
-      for (int i=0; i<neighbors(current).size(); i++) {
-        Node next = neighbors(current).get(i);
+      ArrayList<Node> neighbors = neighbors(current);
+      for (int i=0; i<neighbors.size(); i++) {
+        Node next = neighbors.get(i);
         float newCost = current.costSoFar + graphCost(current, next);
-        if (/*next.costSoFar == null || */newCost < next.costSoFar) {
-          
+        if (!next.costSoFarSet || newCost < next.costSoFar) {
+          next.costSoFar = newCost; next.costSoFarSet = true;
+          next.priority = newCost +
+            dist(goal.loc.x, goal.loc.y, next.loc.x, next.loc.y);
+          // points backwards (bread crumbs)
+          next.cameFrom = current.loc;
+          frontier.add(next);
         }
       }
     }
+    println(frontier.size());
   }
   
   ArrayList<Node> neighbors(Node current) {
@@ -127,6 +139,7 @@ class Map {
         neighbors.add(node);
       }
     }
+    println(neighbors.size());
     return neighbors;
   }
   
@@ -156,9 +169,12 @@ class Node {
   // location and from vector
   PVector loc, cameFrom;
   color _color;
+  // whether it's been initialized
+  boolean costSoFarSet;
   
   Node (PVector _loc, float s, color c, float p) {
     loc = _loc; size = s; _color = c; priority = p;
+    costSoFarSet = false;
   }
   
   void display() {
