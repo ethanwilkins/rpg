@@ -21,7 +21,7 @@ class Map {
     buildObstacles();
     assembleEntities();
     
-    aStar(nodes.get(0), nodes.get(200));
+    aStar(nodes.get(0), nodes.get(5));
   }
   
   void display() {
@@ -86,13 +86,9 @@ class Map {
   void assembleEntities() {
     user = new User(randomNode().loc);
     entities = new ArrayList<Entity>();
-    for (int i=0; i<1; i++) {
+    for (int i=0; i<2; i++) {
       entities.add(new Entity(randomNode().loc));
     }
-  }
-  
-  Node randomNode() {
-    return nodes.get(int(random(nodes.size())));
   }
   
   void aStar(Node start, Node goal) {
@@ -105,8 +101,8 @@ class Map {
     start.costSoFarSet = true;
     
     while (!frontier.isEmpty()) {
-      // always gets last node added to frontier
-      Node current = frontier.get(frontier.size()-1);
+      // needs to get node with the lowest costSoFar
+      Node current = getLowestCostNode(frontier);
       
       // ends when goals reached
       if (current.loc == goal.loc) {
@@ -116,6 +112,11 @@ class Map {
       ArrayList<Node> neighbors = neighbors(current);
       for (int i=0; i<neighbors.size(); i++) {
         Node next = neighbors.get(i);
+        
+        if (next.costSoFarSet) {
+          continue;
+        }
+        
         float newCost = current.costSoFar + graphCost(current, next);
         if (!next.costSoFarSet || newCost < next.costSoFar) {
           next.costSoFar = newCost; next.costSoFarSet = true;
@@ -126,6 +127,8 @@ class Map {
           frontier.add(next);
         }
       }
+      println("x: " + current.loc.x + " y: " + current.loc.y
+        + " n: " + neighbors.size());
     }
     println(frontier.size());
   }
@@ -139,7 +142,6 @@ class Map {
         neighbors.add(node);
       }
     }
-    println(neighbors.size());
     return neighbors;
   }
   
@@ -153,6 +155,21 @@ class Map {
       }
     }
     return canWalkHere;
+  }
+  
+  Node randomNode() {
+    return nodes.get(int(random(nodes.size())));
+  }
+  
+  Node getLowestCostNode(ArrayList<Node> frontier) {
+    Node lowestNode = frontier.get(0);
+    for (int i=1; i<frontier.size(); i++) {
+      Node node = frontier.get(i);
+      if (node.costSoFar < lowestNode.costSoFar) {
+        lowestNode = node;
+      }
+    }
+    return lowestNode;
   }
   
   int graphCost(Node n1, Node n2) {
