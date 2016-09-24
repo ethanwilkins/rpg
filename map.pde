@@ -119,18 +119,21 @@ class Map {
         
         float newCost = current.costSoFar + graphCost(current, next);
         if (!next.costSoFarSet || newCost < next.costSoFar) {
-          next.costSoFar = newCost; next.costSoFarSet = true;
-          next.priority = newCost +
+          next.costSoFar = newCost; next.priority = newCost +
             dist(goal.loc.x, goal.loc.y, next.loc.x, next.loc.y);
           // points backwards (bread crumbs)
           next.cameFrom = current.loc;
-          frontier.add(next);
+          
+          if (!next.costSoFarSet) {
+            next.costSoFarSet = true;
+            frontier.add(next);
+          }
         }
       }
-      println("x: " + current.loc.x + " y: " + current.loc.y
-        + " n: " + neighbors.size());
+      println("X: " + current.loc.x + ", Y: " + current.loc.y
+        + ", Neighbors: " + neighbors.size()
+        + ", Frontier: " + frontier.size());
     }
-    println(frontier.size());
   }
   
   ArrayList<Node> neighbors(Node current) {
