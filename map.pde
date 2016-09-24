@@ -20,8 +20,8 @@ class Map {
     buildGrid();
     buildObstacles();
     assembleEntities();
-    
-    aStar(nodes.get(0), nodes.get(5));
+    // for testing purposes only
+    //aStar(nodes.get(50), nodes.get(75));
   }
   
   void display() {
@@ -108,7 +108,7 @@ class Map {
       if (current.loc == goal.loc) {
         break;
       }
-      
+      // initializes neighbors
       ArrayList<Node> neighbors = neighbors(current);
       for (int i=0; i<neighbors.size(); i++) {
         Node next = neighbors.get(i);
